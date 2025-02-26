@@ -1,0 +1,23 @@
+# Use an official Node.js image
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json first
+COPY package.json package-lock.json ./
+
+# Install dependencies inside the container
+RUN npm ci --omit=dev  # `ci` ensures clean install, `--omit=dev` removes dev dependencies
+
+# Copy the rest of the application code
+COPY . .
+
+# Build TypeScript
+RUN npm run build
+
+# Expose the port your backend runs on
+EXPOSE 4000
+
+# Start the application
+CMD ["node", "dist/App.js"]

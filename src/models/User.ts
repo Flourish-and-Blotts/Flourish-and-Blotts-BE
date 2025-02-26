@@ -1,10 +1,15 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../utils/DB';
 
+export enum USER_ROLE {
+  ADMIN = 'admin',
+  NORMAL_USER = 'user'
+}
 class User extends Model {
   public id!: number;
   public username!: string;
   public password!: string;
+  public role?: USER_ROLE
 }
 
 User.init(
@@ -28,6 +33,11 @@ User.init(
       validate: {
         len: [6, 128], // Password length validation
       },
+    },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: USER_ROLE.NORMAL_USER
     },
   },
   {

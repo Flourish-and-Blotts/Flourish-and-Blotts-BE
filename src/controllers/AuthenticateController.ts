@@ -1,13 +1,21 @@
 import dotEnv from 'dotenv';
 import User from "../models/User";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { USER_ROLE } from '../models/User';
 
 dotEnv.config();
 const JWT_SECRET = process.env.JWT_SECRET ?? 'key';
 
 export const isAuthenticated = (token: string) => {
-    return jwt.verify(token, JWT_SECRET);
+    if (!token) {
+        throw new Error("Invalid token");
+    }
+    return jwt.verify(token, process.env.JWT_SECRET!);
+}
+
+export const isAuthorized = (role: USER_ROLE, roles: USER_ROLE[] = [USER_ROLE.NORMAL_USER]): boolean => {
+    return roles.includes(role)
 }
 
 export const registerUser = async (username: string, password: string) => {
@@ -24,9 +32,9 @@ export const login = async (username: string, password: string) => {
     if (!isMatch) throw new Error("Invalid credentials");
 
     // Generate JWT
-    const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
-        expiresIn: "1h",
+    const token = jwt.sign({ id: user.id, username: user.username, role: user.role }, JWT_SECRET, {
+        expiresIn: "2h",
     });
 
-    return { message: "Login successful", token };
+    return { message: "Login successful", token, role: user.role, username: user.username };
 }

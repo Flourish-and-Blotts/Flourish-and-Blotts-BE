@@ -1,6 +1,8 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../utils/DB';
 import Author from './Author';
+import Order from './Order';
+import OrderProduct from './OrderProduct';
 
 interface ProductAttributes {
   id: number;
@@ -8,10 +10,10 @@ interface ProductAttributes {
   price: number;
   authorId: number;
   imageUrl?: string;
-  description?:string
+  description?: string
 }
 
-interface ProductCreationAttributes extends Optional<ProductAttributes, 'id'> {}
+interface ProductCreationAttributes extends Optional<ProductAttributes, 'id'> { }
 
 class Product extends Model<ProductAttributes, ProductCreationAttributes> implements ProductAttributes {
   public id!: number;
@@ -19,7 +21,7 @@ class Product extends Model<ProductAttributes, ProductCreationAttributes> implem
   public price!: number;
   public authorId!: number;
   public imageUrl!: string;
-  description?:string
+  description?: string
 }
 
 Product.init({
@@ -45,7 +47,7 @@ Product.init({
     },
   },
   imageUrl: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true,
     defaultValue: ''
   },

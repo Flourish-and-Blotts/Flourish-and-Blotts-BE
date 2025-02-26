@@ -16,7 +16,7 @@ router.post("/login", async (req, res) => {
     }
 });
 
-router.post("/users/create", verifyToken, [
+router.post("/users/create", [
     // body('username')
     //     .isString()
     //     .notEmpty()
